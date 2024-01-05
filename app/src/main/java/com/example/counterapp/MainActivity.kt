@@ -23,18 +23,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.counterapp.ui.theme.CounterAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val count: CounterViewModel = viewModel()
             CounterAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background
                 ) {
-                    CounterApp("Android")
+                    CounterApp(count)
                 }
             }
         }
@@ -42,8 +44,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CounterApp(name: String, modifier: Modifier = Modifier) {
-    var count by remember { mutableStateOf(0) }
+fun CounterApp(count: CounterViewModel) {
     Column(
         modifier = Modifier
             .padding(10.dp)
@@ -51,17 +52,10 @@ fun CounterApp(name: String, modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = count.toString(), fontSize = 32.sp)
+        Text(text = count.count.value.toString(), fontSize = 32.sp)
         Spacer(modifier = Modifier.height(10.dp))
-        Button(onClick = { count++ }) {
+        Button(onClick = { count.increase() }) {
             Text(text = "Click Me", fontSize = 20.sp)
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CounterAppPreview() {
-    CounterApp("Android")
-
 }
